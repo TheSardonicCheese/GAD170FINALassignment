@@ -26,7 +26,7 @@ public class GameManager : MonoBehaviour
     }
 
     private static GameManager gameManRef;
-    //void awke is called before void start on ANY  OBJECT
+
     private void Awake()
     {
         if (gameManRef == null)
@@ -61,7 +61,7 @@ public class GameManager : MonoBehaviour
                 //load overworld
                 SavePlayerStuff(false);
                 SceneManager.LoadScene("OverWorld");
-                LoadPlayerStuff(false);
+                //LoadPlayerStuff(true);
                 break;
 
             case Worlds.BattleStage:
@@ -69,14 +69,14 @@ public class GameManager : MonoBehaviour
                 //GenerateEnemies();
                 SavePlayerStuff(true);
                 SceneManager.LoadScene("BattleStage");
-                LoadPlayerStuff(true);
+                //LoadPlayerStuff(false);
                 break;
         }
     }
     void SavePlayerStuff(bool isFromOverworld)
     {
         GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
-        //only save position in overworld
+        Debug.Log(playerObj.name);
         if (isFromOverworld)
         {
             //save both location and rotation as seperate floats, using similar naming conventions
@@ -89,7 +89,8 @@ public class GameManager : MonoBehaviour
         }
 
         //Save stats that we need to track!
-        Stats playerStats = GameObject.FindGameObjectWithTag("Player").GetComponent<Stats>();
+        Stats playerStats = playerObj.GetComponent<Stats>();
+        PlayerPrefs.SetFloat("playerHealth", playerStats.maxSatiety);
         PlayerPrefs.SetFloat("playerSatiety", playerStats.satiety);
         PlayerPrefs.SetInt("playerMetabolism", playerStats.metabolism);
         PlayerPrefs.SetInt("playerHunger", playerStats.hunger);
@@ -98,24 +99,27 @@ public class GameManager : MonoBehaviour
         PlayerPrefs.SetInt("playerLuck", playerStats.luck);
         PlayerPrefs.SetInt("playerCurrentLevel", playerStats.currentLevel);
         PlayerPrefs.SetFloat("playerXP", playerStats.totalXP);
+        Debug.Log(playerStats.totalXP + " " + PlayerPrefs.HasKey("playerXP"));
 
     }
 
-    void LoadPlayerStuff(bool goingToOverworld)
+    public void LoadPlayerStuff(bool goingToOverworld)
     {
+        GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
+        Debug.Log(playerObj.name);
         //load the existing stats and apply them to the player!
-        Stats playerStats = GameObject.FindGameObjectWithTag("Player").GetComponent<Stats>();
-        playerStats.satiety = PlayerPrefs.GetFloat("playerHealth", playerStats.maxSatiety);
+        Stats playerStats = playerObj.GetComponent<Stats>();
+        playerStats.maxSatiety = PlayerPrefs.GetFloat("playerHealth", playerStats.maxSatiety);
+        playerStats.satiety = PlayerPrefs.GetFloat("playerSatiety", playerStats.satiety);
         playerStats.metabolism = PlayerPrefs.GetInt("playerMetabolism", playerStats.metabolism);
         playerStats.hunger = PlayerPrefs.GetInt("playerHunger", playerStats.hunger);
         playerStats.rawness = PlayerPrefs.GetInt("playerRawness", playerStats.rawness);
         playerStats.dexterity = PlayerPrefs.GetInt("playerDexterity", playerStats.dexterity);
         playerStats.luck = PlayerPrefs.GetInt("playerLuck", playerStats.luck);
         playerStats.currentLevel = PlayerPrefs.GetInt("playerCurrentLevel", 1);
-        playerStats.totalXP = PlayerPrefs.GetInt("playerXP", 0);
+        playerStats.totalXP = PlayerPrefs.GetFloat("playerXP", playerStats.totalXP);
+        Debug.Log(PlayerPrefs.GetInt("playerXP", 0) + " " + PlayerPrefs.HasKey("playerXP"));
 
-        //load position only in overworld
-        GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
         if (goingToOverworld)
         {
             playerObj.transform.position = new Vector3(PlayerPrefs.GetFloat("playerPosx", 40f),
@@ -133,7 +137,7 @@ public class GameManager : MonoBehaviour
     public void DeleteSavedStuff()
     {
         //hard reset
-        if (Input.GetKeyDown("r"))
+        if (Input.GetKeyDown("k"))
         {
             PlayerPrefs.DeleteAll();
             SceneManager.LoadScene("Overworld");

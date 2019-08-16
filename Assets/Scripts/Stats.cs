@@ -81,7 +81,7 @@ public class Stats : MonoBehaviour
         {
             currentLevel++;
             maxSatiety += 20;
-            satiety = maxSatiety;
+            satiety += 20;
             metabolism += 10;
             hunger += 10;
             rawness += 10;
@@ -92,7 +92,7 @@ public class Stats : MonoBehaviour
 
     public void GainXPGnoc()
     {
-        totalXP += 1f / (.5f * currentLevel);
+        totalXP += 2f / (.5f * currentLevel);
         XPandLvlUp();
 
     }

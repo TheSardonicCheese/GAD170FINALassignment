@@ -6,6 +6,7 @@ public class TallGrass : MonoBehaviour
 {
     private GameObject gameManager;
     public List<GameObject> enemiesLibrary;
+
     public GameObject player;
 
     public bool isInField;
@@ -25,9 +26,7 @@ public class TallGrass : MonoBehaviour
         player = GameObject.FindGameObjectWithTag("Player");
         gameManager = GameObject.FindGameObjectWithTag("GameManager");
 
-        enemiesLibrary.Add(GameObject.FindGameObjectWithTag("Easy"));
-        enemiesLibrary.Add(GameObject.FindGameObjectWithTag("Normal"));
-        enemiesLibrary.Add(GameObject.FindGameObjectWithTag("Difficult"));
+        
         //grab all the kinds of enemies
         
         RollDice();
@@ -42,18 +41,6 @@ public class TallGrass : MonoBehaviour
         {
             for(int i = 0; i < 3; i++)
             {
-                /*if (player.GetComponent<Stats>().currentLevel < 5)
-                {
-                    enemiesToSend.Add(enemiesLibrary[0]);
-                }
-                else if(player.GetComponent<Stats>().currentLevel > 4 && player.GetComponent<Stats>().currentLevel < 10)
-                {
-                    enemiesToSend.Add(enemiesLibrary[Random.Range(0, 2)]);
-                }
-                else if(player.GetComponent<Stats>().currentLevel > 10)
-                {
-                    enemiesToSend.Add(enemiesLibrary[Random.Range(0, 3)]);
-                }*/
                 switch (myType)
                 {
                     case fieldType.spaghetti:

@@ -5,7 +5,6 @@ using UnityEngine;
 public class Enemy : MonoBehaviour
 
 {
-    //removing enemies from list
     private GameObject battleManager;
 
     public Stats myStats;
@@ -18,6 +17,7 @@ public class Enemy : MonoBehaviour
     }
 
     public EnemyTypes myType;
+
 
 
 	void Start () 
@@ -37,11 +37,17 @@ public class Enemy : MonoBehaviour
             case EnemyTypes.monsterella:
                 //do thing
                 break;
-
         }
-
 	}
-	
+
+    /*private void OnTriggerEnter(Collider col)
+    {
+        if (col.gameObject.tag == "Player")
+        {
+            GetComponent<GameManager>().TravelToWorld(GameManager.Worlds.BattleStage);
+            Destroy(col.gameObject);
+        }
+    }*/
 
     public void Defeated()
     {

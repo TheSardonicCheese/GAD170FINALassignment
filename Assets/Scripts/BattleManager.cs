@@ -47,7 +47,6 @@ public class BattleManager : MonoBehaviour
     public Decision currentDecision;
 
     public event System.Action<bool, float> UpdateHealth;
-    public event System.Action UpdateDecision;
     public event System.Action<string> UpdateLog;
 
     private void Awake()
@@ -70,34 +69,39 @@ public class BattleManager : MonoBehaviour
         gameManager.GetComponent<GameManager>().enemiesToFight.Clear();
 
         SpawnEnemy();
+        gameManager.GetComponent<GameManager>().LoadPlayerStuff(false);
     }
-    
+
+    public void SpawnEnemy()
+    {
+        if (enemySpawnList.Count > 0)
+        {
+            Transform EnemySpawnLoc = GameObject.FindGameObjectWithTag("EnemySpawnLoc").transform;
+            enemyObj = Instantiate(enemySpawnList[0], EnemySpawnLoc);
+        }
+        else
+        {
+            UpdateLog(" All enemies defeated!");
+        }
+    }
 
     public void RemoveEnemy(GameObject EnemyToRemove)
     {
         GameObject.Destroy(EnemyToRemove);
         enemySpawnList.RemoveAt(0);
         Debug.Log(" enemy removed");
-        Destroy(EnemyToRemove);
-        enemySpawnList.RemoveAt(0);
-        
-    }
-    
-    public void SpawnEnemy()
-    {
-        //Spawning an enemy using the size of the list as the maximum of the random range
-        if (enemySpawnList.Count == 0)
+        //Destroy(EnemyToRemove);
+        if(enemySpawnList.Count == 0)
         {
-            UpdateLog(" All enemies defeated!");
+            combatState = CombatState.victory;
         }
         else
         {
-            Transform EnemySpawnLoc = GameObject.FindGameObjectWithTag("EnemySpawnLoc").transform;
-            enemyObj = Instantiate(enemySpawnList[0], EnemySpawnLoc);
-        } 
-          
+           Debug.Log(" The fight isn't over yet!");
+           combatState = CombatState.determineFirst;
+        }
     }
-
+    
     void CookCombat()
     {
         currentDecision = Decision.cook;
@@ -175,7 +179,7 @@ public class BattleManager : MonoBehaviour
                     GiveXP();
                     RemoveEnemy(enemyObj);
                     SpawnEnemy();
-                    combatState = CombatState.victory;
+                    
                     break;
                 }
                 //next case, usually enemy turn
@@ -208,19 +212,16 @@ public class BattleManager : MonoBehaviour
                 if (enemySpawnList.Count == 0)
                 {
                     UpdateLog(" You win!");
-                    SceneManager.LoadScene("OverWorld");
+                    gameManager.GetComponent<GameManager>().TravelToWorld(GameManager.Worlds.OverWorld);
                     break;
                 }
-                else
-                {
-                    Debug.Log(" The fight isn't over yet!");
-                    combatState = CombatState.determineFirst;
-                    break;
-                }
+                break;
+              
 
 
 
             case CombatState.loss:
+                gameManager.GetComponent<GameManager>().DeleteSavedStuff();
                 SceneManager.LoadScene("Game Over");
                 break;
 

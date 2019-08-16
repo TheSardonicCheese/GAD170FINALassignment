@@ -8,6 +8,11 @@ public class FollowCamera : MonoBehaviour
     public Transform followLocation;
 
 
+    private void Start()
+    {
+        GameObject gameMan = GameObject.FindGameObjectWithTag("GameManager");
+        gameMan.GetComponent<GameManager>().LoadPlayerStuff(true);
+    }
 
     void Update()
     {

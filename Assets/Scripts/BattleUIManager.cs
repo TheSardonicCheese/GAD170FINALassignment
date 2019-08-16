@@ -31,6 +31,7 @@ public class BattleUIManager : MonoBehaviour
         //original event on left, subscriber on the right!
         bManager.UpdateHealth += UpdateHealthBar;
         bManager.UpdateLog += UpdateCombatLog;
+
     }
 
 
